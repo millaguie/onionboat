@@ -1,10 +1,18 @@
-FROM chambana/base:latest
+FROM debian:9
 MAINTAINER "Josh King <jking@chambana.net>"
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
-ENV DOCKER_GEN_VERSION 0.7.1
+ENV DOCKER_GEN_VERSION 0.7.3
 
 EXPOSE 9001
+
+RUN apt-get -qq update && \
+    apt-get install -y gnupg gnupg-agent \
+                       wget \
+                       apt-utils \
+                       dirmngr && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
 
 ADD files/apt/tor.list /etc/apt/sources.list.d/tor.list
 RUN gpg --keyserver keys.gnupg.net --recv 886DDD89 && \
